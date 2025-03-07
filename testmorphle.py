@@ -2,23 +2,24 @@ from flask import Flask
 import os
 import subprocess
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
 @app.route('/htop')
 def htop():
-    username = os.getenv("USER", "codespace")
-    server_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    name = "Manish Mukhia"
+    user = os.getenv("USER") or os.getenv("USERNAME") or "codespace"
+    ist_time = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S %Z')
+    
+    # Run top command
     top_output = subprocess.getoutput("top -b -n 1")
 
     return f"""
-    <pre>
-    Name: Manish Mukhia
-    Username: {username}
-    Server Time (IST): {server_time}
-    TOP Output:
-    {top_output}
-    </pre>
+   <p>Name: {name}</p>
+   <p>User: {user}</p>
+   <p>Server Time (IST): {ist_time}</p>
+    <pre>{top_output}</pre>
     """
 
 if __name__ == '__main__':
